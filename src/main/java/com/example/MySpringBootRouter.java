@@ -77,8 +77,9 @@ public class MySpringBootRouter extends RouteBuilder {
 			.setHeader("CamelHttpMethod", constant("PUT"))
 			.to("direct:request");*/
 	  
-		from("direct:post-customer")
-			.put("/post-order")
+		//from("direct:post-customer")
+		from("rest:post:post-order")
+			//.put("/post-order")
 			//.type(Customer.class).outType(CustomerSuccess.class)
         	//.removeHeaders("*")
         	.setHeader("CamelHttpMethod", constant("POST"))
