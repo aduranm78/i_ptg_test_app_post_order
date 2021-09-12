@@ -55,7 +55,7 @@ public class MySpringBootRouter extends RouteBuilder {
     			String encodedDateRange = URLEncoder.encode(dateRange, "UTF-8");
     	    	exchange.getMessage().setHeader(Exchange.HTTP_QUERY, "warehouse=28002&between=" + encodedDateRange);
     	    	exchange.getMessage().setHeader(Exchange.HTTP_URI, wmsUri);
-    		})*/
+    		})
     		.to("log:DEBUG?showBody=true&showHeaders=true")
     		//.to("https://test?throwExceptionOnFailure=false") // Para no lanzar errores
     		.to("https://wms")
