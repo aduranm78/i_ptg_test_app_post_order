@@ -41,8 +41,9 @@ public class MySpringBootRouter extends RouteBuilder {
     		// .continued(true); // Para continuar con la ruta
 
     	
-    	/*from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
-    		.process(exchange -> {
+    	//from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
+		//from("")
+    		/*.process(exchange -> {
     			String wmsUri = env.getProperty("wms.uri");
 				System.out.println("URL WMS: " + wmsUri);
     			// String dateRange = WmsParams.getDateRange(60 * 60 * 24 * 90); // Poll interval in seconds (3 months)
@@ -54,11 +55,11 @@ public class MySpringBootRouter extends RouteBuilder {
     			String encodedDateRange = URLEncoder.encode(dateRange, "UTF-8");
     	    	exchange.getMessage().setHeader(Exchange.HTTP_QUERY, "warehouse=28002&between=" + encodedDateRange);
     	    	exchange.getMessage().setHeader(Exchange.HTTP_URI, wmsUri);
-    		})
+    		})*/
     		.to("log:DEBUG?showBody=true&showHeaders=true")
     		//.to("https://test?throwExceptionOnFailure=false") // Para no lanzar errores
     		.to("https://wms")
-        	.to("log:DEBUG?showBody=true&showHeaders=true")*/
+        	.to("log:DEBUG?showBody=true&showHeaders=true")
 
 		/*rest()
 			.path("/").consumes("application/json").produces("application/json")
@@ -76,8 +77,10 @@ public class MySpringBootRouter extends RouteBuilder {
 			.setHeader("CamelHttpMethod", constant("PUT"))
 			.to("direct:request");*/
 	  
-		from("direct:request")
-        	.removeHeaders("*")
+		from("direct:post-customer")
+			.put("/post-order")
+			.type(Customer.class).outType(CustomerSuccess.class)
+        	//.removeHeaders("*")
         	.setHeader("CamelHttpMethod", constant("POST"))
         	.setHeader(Exchange.HTTP_URI, constant(erpUri))
         	.process(new Processor() {
