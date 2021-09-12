@@ -79,7 +79,7 @@ public class MySpringBootRouter extends RouteBuilder {
 	  
 		from("direct:post-customer")
 			.put("/post-order")
-			.type(Customer.class).outType(CustomerSuccess.class)
+			//.type(Customer.class).outType(CustomerSuccess.class)
         	//.removeHeaders("*")
         	.setHeader("CamelHttpMethod", constant("POST"))
         	.setHeader(Exchange.HTTP_URI, constant(erpUri))
