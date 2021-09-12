@@ -60,7 +60,7 @@ public class MySpringBootRouter extends RouteBuilder {
     		.to("https://wms")
         	.to("log:DEBUG?showBody=true&showHeaders=true")*/
 
-		rest()
+		/*rest()
 			.path("/").consumes("application/json").produces("application/json")
 			  .put("/order")
 	  //          .type(Customer.class).outType(CustomerSuccess.class)
@@ -74,11 +74,11 @@ public class MySpringBootRouter extends RouteBuilder {
 			.to("direct:request");
 		from("direct:put-customer")
 			.setHeader("CamelHttpMethod", constant("PUT"))
-			.to("direct:request");
+			.to("direct:request");*/
 	  
 		from("direct:request")
-        	//.removeHeaders("*")
-        	//.setHeader("CamelHttpMethod", constant("POST"))
+        	.removeHeaders("*")
+        	.setHeader("CamelHttpMethod", constant("POST"))
         	.setHeader(Exchange.HTTP_URI, constant(erpUri))
         	.process(new Processor() {
                 @Override
