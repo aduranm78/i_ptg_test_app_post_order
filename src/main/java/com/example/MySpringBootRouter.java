@@ -24,19 +24,23 @@ public class MySpringBootRouter extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+		restConfiguration()
+		.component("netty-http")
+		.port("8080")
+		.bindingMode(RestBindingMode.auto);
     	
-    	String erpUri = "https://5298967.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=583&deploy=1";
+    	String erpUri = "https://5298967-sb1.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=575&deploy=1";
     	
     	onException(HttpOperationFailedException.class)
     		.handled(true)
     		.process(exchange -> {
-    			System.out.println("No hay registros en el periodo de consulta");
+    			System.out.println("Error al enviar información en Netsuite");
     			System.out.println(exchange.getProperties());
     		});
     		// .continued(true); // Para continuar con la ruta
 
     	
-    	from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
+    	/*from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
     		.process(exchange -> {
     			String wmsUri = env.getProperty("wms.uri");
 				System.out.println("URL WMS: " + wmsUri);
@@ -53,9 +57,27 @@ public class MySpringBootRouter extends RouteBuilder {
     		.to("log:DEBUG?showBody=true&showHeaders=true")
     		//.to("https://test?throwExceptionOnFailure=false") // Para no lanzar errores
     		.to("https://wms")
-        	.to("log:DEBUG?showBody=true&showHeaders=true")
-        	.removeHeaders("*")
-        	.setHeader("CamelHttpMethod", constant("POST"))
+        	.to("log:DEBUG?showBody=true&showHeaders=true")*/
+
+		rest()
+			.path("/").consumes("application/json").produces("application/json")
+			  .put("/order")
+	  //          .type(Customer.class).outType(CustomerSuccess.class)
+				.to("direct:put-customer")
+			  .post("/order")
+	  //          .type(Customer.class).outType(CustomerSuccess.class)
+				.to("direct:post-customer");
+		  
+		from("direct:post-customer")
+			.setHeader("CamelHttpMethod", constant("POST"))
+			.to("direct:request");
+		from("direct:put-customer")
+			.setHeader("CamelHttpMethod", constant("PUT"))
+			.to("direct:request");
+	  
+		from("direct:request")
+        	//.removeHeaders("*")
+        	//.setHeader("CamelHttpMethod", constant("POST"))
         	.setHeader(Exchange.HTTP_URI, constant(erpUri))
         	.process(new Processor() {
                 @Override

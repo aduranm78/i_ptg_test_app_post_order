@@ -30,7 +30,7 @@ public class OAuthSign {
 	    
 	    try {
 	        HttpRequest signedReq = consumer.sign(httppost);
-	        String realm = "OAuth realm=\"5298967\",";
+	        String realm = "OAuth realm=\"5298967_SB1\",";
 	        return signedReq.getHeader("Authorization").toString().replace("OAuth", realm);
 	    } catch (OAuthMessageSignerException ex) {
 	        Logger.getLogger(HttpPost.class.getName()).log(Level.SEVERE, null, ex);
