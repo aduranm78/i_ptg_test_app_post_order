@@ -78,7 +78,7 @@ public class MySpringBootRouter extends RouteBuilder {
 			.to("direct:request");*/
 	  
 		//from("direct:post-customer")
-		from("rest:post:post-order")
+		from("direct:order")
 			//.put("/post-order")
 			//.type(Customer.class).outType(CustomerSuccess.class)
         	//.removeHeaders("*")
